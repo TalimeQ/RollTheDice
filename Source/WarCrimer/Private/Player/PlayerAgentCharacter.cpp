@@ -2,6 +2,7 @@
 
 #include "Public/Player/PlayerAgentCharacter.h"
 #include "Paper2D/Classes/PaperFlipbookComponent.h"
+#include "Paper2D/Classes/PaperFlipbook.h"
 #include "Runtime/Engine/Classes/Components/CapsuleComponent.h"
 
 
@@ -14,16 +15,21 @@ APlayerAgentCharacter::APlayerAgentCharacter()
 	playerHitbox = CreateDefaultSubobject<UCapsuleComponent>("Player Hitbox");
 }
 
-void APlayerAgentCharacter::MoveForward(float movementValue)
+
+
+void APlayerAgentCharacter::MovePawn(float movementValue,FVector Direction)
 {
-	FVector Direction = FVector(1, 0, 0);
 	AddMovementInput(Direction, movementValue);
+}
+
+void APlayerAgentCharacter::MoveUp(float movementValue)
+{
+	fUpMovementValue = movementValue;
 }
 
 void APlayerAgentCharacter::MoveRight(float movementValue)
 {
-	FVector Direction = FVector(0, 1, 0);
-	AddMovementInput(Direction, movementValue);
+	fRightMovementValue = movementValue;
 }
 
 // Called when the game starts or when spawned
@@ -47,25 +53,21 @@ void APlayerAgentCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 }
 
-void APlayerAgentCharacter::ProcessIntentMoveVertical(float value)
-{
-	if (value != 0.0)
-	{
-		MoveForward(value);
-		UE_LOG(LogTemp, Warning, TEXT("FORWARD!"));
-	}
-	
-	
-}
-
-void APlayerAgentCharacter::ProcessIntentMoveHorizontal(float value)
+void APlayerAgentCharacter::ProcessIntentMove(float value, FVector Direction)
 {	
-	if (value != 0.0)
+	AddMovementInput(Direction,value);
+	if (Direction == FVector(1.0f, 0.0f, 0.0f)) MoveUp(value);
+	else if(Direction == FVector(0.0f, 1.0f, 0.0f)) MoveRight(value);
+	if (fRightMovementValue != 0.0f || fUpMovementValue != 0.0f)
 	{
-		MoveRight(value);
-		UE_LOG(LogTemp, Warning, TEXT("Right!"));
+		playerAnimationState = EPlayerAnimState::EWalking;
+		ChangeAnimation();
 	}
-	
+	else
+	{
+		playerAnimationState = EPlayerAnimState::EIdle;
+		ChangeAnimation();
+	}
 }
 
 void APlayerAgentCharacter::ProcessIntentShoot()
@@ -78,3 +80,12 @@ void APlayerAgentCharacter::ProcessIntentInteract()
 	UE_LOG(LogTemp, Warning, TEXT("Interacting!"));
 }
 
+void APlayerAgentCharacter::ChangeAnimation()
+{
+	UPaperFlipbook** newAnimation = playerAnimSprites.Find(playerAnimationState);
+	check(playerRepresentation)
+	{
+		
+		playerRepresentation->SetFlipbook(*newAnimation);
+	}
+}

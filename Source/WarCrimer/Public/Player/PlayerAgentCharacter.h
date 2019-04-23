@@ -39,6 +39,18 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sprite")
 	TArray<UPaperFlipbook*> playerSprites;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sprite")
+	TMap<TEnumAsByte<EPlayerAnimState>, UPaperFlipbook*> playerAnimSprites;
+
+private:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Sprite")
+    TEnumAsByte<EPlayerAnimState> playerAnimationState = EWalking;
+
+	float fRightMovementValue = 0.0f;
+
+	float fUpMovementValue = 0.0f;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,9 +62,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void ProcessIntentMoveVertical(float value);
-
-	void ProcessIntentMoveHorizontal(float value);
+	void ProcessIntentMove(float value, FVector Direction);
 
 	void ProcessIntentShoot();
 
@@ -63,7 +73,12 @@ public:
 	
 private:
 
-	void MoveForward(float movementValue);
+	void MovePawn(float movementValue, FVector Direction);
+
+	void MoveUp(float movementValue);
 
 	void MoveRight(float movementValue);
+
+	void ChangeAnimation();
+	
 };
