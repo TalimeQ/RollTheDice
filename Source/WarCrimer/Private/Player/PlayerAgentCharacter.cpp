@@ -57,7 +57,7 @@ void APlayerAgentCharacter::ProcessIntentMove(float value, FVector Direction)
 {	
 	AddMovementInput(Direction,value);
 	if (Direction == FVector(1.0f, 0.0f, 0.0f)) MoveUp(value);
-	else if(Direction == FVector(0.0f, 1.0f, 0.0f)) MoveRight(value);
+	else if(Direction == FVector(0.0f, -1.0f, 0.0f)) MoveRight(value);
 	if (fRightMovementValue != 0.0f || fUpMovementValue != 0.0f)
 	{
 		playerAnimationState = EPlayerAnimState::EWalking;

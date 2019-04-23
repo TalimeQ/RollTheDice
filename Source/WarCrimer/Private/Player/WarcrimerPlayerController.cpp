@@ -27,7 +27,7 @@ void AWarcrimerPlayerController::IntentMoveVertical(float axisValue)
 	check(controlledCharacter)
 	{
 		
-		controlledCharacter->ProcessIntentMove(axisValue, FVector(1.0f, 0.0f, 0.0f));
+		controlledCharacter->ProcessIntentMove(axisValue, FVector( 0.0f, -1.0f, 0.0f));
 	}
 }
 
@@ -36,7 +36,7 @@ void AWarcrimerPlayerController::IntentMoveHorizontal(float axisValue)
 	check(controlledCharacter)
 	{
 		
-		controlledCharacter->ProcessIntentMove(axisValue, FVector(0.0f, 1.0f, 0.0f));
+		controlledCharacter->ProcessIntentMove(axisValue, FVector(1.0f, 0.0f, 0.0f));
 	}
 }
 
