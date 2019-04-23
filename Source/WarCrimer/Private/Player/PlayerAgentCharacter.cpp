@@ -11,7 +11,6 @@ APlayerAgentCharacter::APlayerAgentCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	playerRepresentation = CreateDefaultSubobject<UPaperFlipbookComponent>("Player Flipbook");
 	playerHitbox = CreateDefaultSubobject<UCapsuleComponent>("Player Hitbox");
 }
 
@@ -20,6 +19,7 @@ APlayerAgentCharacter::APlayerAgentCharacter()
 void APlayerAgentCharacter::MovePawn(float movementValue,FVector Direction)
 {
 	AddMovementInput(Direction, movementValue);
+	UE_LOG(LogTemp,Warning,TEXT("Current player position %s"),*(this->GetActorLocation().ToString()))
 }
 
 void APlayerAgentCharacter::MoveUp(float movementValue)
@@ -55,9 +55,17 @@ void APlayerAgentCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void APlayerAgentCharacter::ProcessIntentMove(float value, FVector Direction)
 {	
-	AddMovementInput(Direction,value);
-	if (Direction == FVector(1.0f, 0.0f, 0.0f)) MoveUp(value);
-	else if(Direction == FVector(0.0f, -1.0f, 0.0f)) MoveRight(value);
+	
+	if (Direction == FVector(1.0f, 0.0f, 0.0f))
+	{
+		MovePawn(value, Direction);
+		MoveUp(value);
+	}
+	else if(Direction == FVector(0.0f, -1.0f, 0.0f))
+	{
+		MovePawn(value, Direction);
+		MoveRight(value);
+	}
 	if (fRightMovementValue != 0.0f || fUpMovementValue != 0.0f)
 	{
 		playerAnimationState = EPlayerAnimState::EWalking;
@@ -87,5 +95,6 @@ void APlayerAgentCharacter::ChangeAnimation()
 	{
 		
 		playerRepresentation->SetFlipbook(*newAnimation);
+		UE_LOG(LogTemp, Warning, TEXT("Changed Anim"));
 	}
 }
