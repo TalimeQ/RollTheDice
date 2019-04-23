@@ -19,7 +19,6 @@ APlayerAgentCharacter::APlayerAgentCharacter()
 void APlayerAgentCharacter::MovePawn(float movementValue,FVector Direction)
 {
 	AddMovementInput(Direction, movementValue);
-	UE_LOG(LogTemp,Warning,TEXT("Current player position %s"),*(this->GetActorLocation().ToString()))
 }
 
 void APlayerAgentCharacter::MoveUp(float movementValue)
@@ -53,6 +52,7 @@ void APlayerAgentCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 }
 
+//TODO: REFACTOR
 void APlayerAgentCharacter::ProcessIntentMove(float value, FVector Direction)
 {	
 	
@@ -66,21 +66,22 @@ void APlayerAgentCharacter::ProcessIntentMove(float value, FVector Direction)
 		MovePawn(value, Direction);
 		MoveRight(value);
 	}
-	if (fRightMovementValue != 0.0f || fUpMovementValue != 0.0f)
+	if ((fRightMovementValue != 0.0f || fUpMovementValue != 0.0f) && playerAnimationState != EPlayerAnimState::EShooting)
 	{
 		playerAnimationState = EPlayerAnimState::EWalking;
 		ChangeAnimation();
 	}
-	else
+	else if(playerAnimationState != EPlayerAnimState::EShooting)
 	{
 		playerAnimationState = EPlayerAnimState::EIdle;
 		ChangeAnimation();
 	}
 }
 
-void APlayerAgentCharacter::ProcessIntentShoot()
+
+void APlayerAgentCharacter::SetAnimationState(TEnumAsByte<EPlayerAnimState> newState)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Shooting!"));
+	playerAnimationState = newState;
 }
 
 void APlayerAgentCharacter::ProcessIntentInteract()

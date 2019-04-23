@@ -64,7 +64,11 @@ public:
 
 	void ProcessIntentMove(float value, FVector Direction);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Shoot")
 	void ProcessIntentShoot();
+
+	UFUNCTION(BlueprintCallable, Category = "Animation")
+	void SetAnimationState(TEnumAsByte<EPlayerAnimState> newState);
 
 	void ProcessIntentInteract();
 
@@ -79,6 +83,7 @@ private:
 
 	void MoveRight(float movementValue);
 
+	UFUNCTION(BlueprintCallable, Category = "Animation")
 	void ChangeAnimation();
 	
 };
