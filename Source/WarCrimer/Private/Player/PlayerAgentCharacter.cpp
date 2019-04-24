@@ -24,11 +24,20 @@ void APlayerAgentCharacter::MovePawn(float movementValue,FVector Direction)
 void APlayerAgentCharacter::MoveUp(float movementValue)
 {
 	fUpMovementValue = movementValue;
+	if (movementValue > 0)
+	{
+		playerRepresentation->SetRelativeRotation(FRotator(0, 0, -90));
+	}
+	else if (movementValue < 0)
+	{
+		playerRepresentation->SetRelativeRotation(FRotator(180, 0, -90));
+	}
 }
 
 void APlayerAgentCharacter::MoveRight(float movementValue)
 {
 	fRightMovementValue = movementValue;
+
 }
 
 // Called when the game starts or when spawned
