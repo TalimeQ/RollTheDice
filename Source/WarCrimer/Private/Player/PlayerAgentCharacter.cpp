@@ -55,23 +55,25 @@ void APlayerAgentCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 //TODO: REFACTOR
 void APlayerAgentCharacter::ProcessIntentMove(float value, FVector Direction)
 {	
-	
-	if (Direction == FVector(1.0f, 0.0f, 0.0f))
-	{
-		MovePawn(value, Direction);
-		MoveUp(value);
-	}
-	else if(Direction == FVector(0.0f, -1.0f, 0.0f))
-	{
-		MovePawn(value, Direction);
-		MoveRight(value);
-	}
+	MovePawn(value, Direction);
+	SetAnimationMovementData(Direction, value);
+	ChangeMovementAnimation();
+}
+
+void APlayerAgentCharacter::SetAnimationMovementData(FVector &Direction, float value)
+{
+	if (Direction == FVector(1.0f, 0.0f, 0.0f)) MoveUp(value);
+	else if (Direction == FVector(0.0f, -1.0f, 0.0f)) MoveRight(value);
+}
+
+void APlayerAgentCharacter::ChangeMovementAnimation()
+{
 	if ((fRightMovementValue != 0.0f || fUpMovementValue != 0.0f) && playerAnimationState != EPlayerAnimState::EShooting)
 	{
 		playerAnimationState = EPlayerAnimState::EWalking;
 		ChangeAnimation();
 	}
-	else if(playerAnimationState != EPlayerAnimState::EShooting)
+	else if (playerAnimationState != EPlayerAnimState::EShooting)
 	{
 		playerAnimationState = EPlayerAnimState::EIdle;
 		ChangeAnimation();
@@ -93,9 +95,7 @@ void APlayerAgentCharacter::ChangeAnimation()
 {
 	UPaperFlipbook** newAnimation = playerAnimSprites.Find(playerAnimationState);
 	check(playerRepresentation)
-	{
-		
+	{	
 		playerRepresentation->SetFlipbook(*newAnimation);
-		UE_LOG(LogTemp, Warning, TEXT("Changed Anim"));
 	}
 }

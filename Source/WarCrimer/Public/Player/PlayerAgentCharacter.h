@@ -64,6 +64,10 @@ public:
 
 	void ProcessIntentMove(float value, FVector Direction);
 
+	void SetAnimationMovementData(FVector &Direction, float value);
+
+	void ChangeMovementAnimation();
+
 	UFUNCTION(BlueprintImplementableEvent, Category = "Shoot")
 	void ProcessIntentShoot();
 
