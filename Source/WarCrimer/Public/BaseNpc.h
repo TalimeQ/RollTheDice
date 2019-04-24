@@ -46,6 +46,9 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "state")
 	virtual void SwitchState(TEnumAsByte<ENpcStatus> newState);
 
+	UFUNCTION(BlueprintCallable, Category = "Combat")
+	virtual void OnHit()  PURE_VIRTUAL(ABaseNpc::OnHit(), ;);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

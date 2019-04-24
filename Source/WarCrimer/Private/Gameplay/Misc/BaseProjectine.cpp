@@ -2,6 +2,7 @@
 
 
 #include "Public/Gameplay/Misc/BaseProjectine.h"
+#include "Runtime/Engine/Classes/GameFramework/ProjectileMovementComponent.h"
 #include "Paper2D/Classes/PaperFlipbookComponent.h"
 
 
@@ -46,5 +47,5 @@ void ABaseProjectine::BulletMove(float DeltaTime)
 {
 	if (!bIsMoving) return;
 	FVector moveOffset = currentDirection * DeltaTime * travelSpeed;
-	this->ApplyWorldOffset(moveOffset, false);
+	//this->projectileRepresentation->
 }

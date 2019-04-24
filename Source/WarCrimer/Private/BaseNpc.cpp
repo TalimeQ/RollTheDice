@@ -15,6 +15,7 @@ ABaseNpc::ABaseNpc()
 void ABaseNpc::BeginPlay()
 {
 	Super::BeginPlay();
+	stateUpdate = &ABaseNpc::IdleUpdate;
 	
 }
 

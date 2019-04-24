@@ -7,6 +7,7 @@
 #include "BaseProjectine.generated.h"
 
 class UPaperFlipbookComponent;
+class UProjectileMovementComponent;
 
 UCLASS(abstract)
 class  WARCRIMER_API ABaseProjectine : public AActor
@@ -30,6 +31,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Bullet")
 		bool bIsMoving = true;
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Bullet")
+		UProjectileMovementComponent* projectileComponent;
 public:	
 	// Sets default values for this actor's properties
 	ABaseProjectine();
