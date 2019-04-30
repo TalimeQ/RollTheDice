@@ -9,27 +9,31 @@
 /**
  * 
  */
+
+
 UCLASS()
 class WARCRIMER_API ACivillian : public ABaseNpc
 {
 	GENERATED_BODY()
 	
+
+
 protected:
 
-
 	virtual void OnHit() override;
+
+	virtual void BeginPlay() override;
+
+	void SetRandomSpriteSet();
 
 private:
 
 	virtual void CombatUpdate(float deltaTime) override;
 
-	virtual void IdleUpdate(float deltaTime) override;
-
 	virtual void DyingUpdate(float deltaTime) override;
 
 	virtual void SpawnedUpdate(float deltaTime) override;
 
-	virtual void WanderUpdate(float deltaTime) override;
 	
 
 };

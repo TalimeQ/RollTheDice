@@ -2,10 +2,7 @@
 
 #include "Public/Gameplay/Characters/Civillian.h"
 
-void ACivillian::IdleUpdate(float deltaTime)
-{
 
-}
 
 void ACivillian::DyingUpdate(float deltaTime)
 {
@@ -15,8 +12,18 @@ void ACivillian::SpawnedUpdate(float deltaTime)
 {
 }
 
-void ACivillian::WanderUpdate(float deltaTime)
+void  ACivillian::BeginPlay()
 {
+	Super::BeginPlay();
+	SetRandomSpriteSet();
+
+}
+
+void ACivillian::SetRandomSpriteSet()
+{
+	int randomSpriteIndex = FMath::RandRange(0, npcSpritePool.Num() - 1);
+	this->npcAnimSprites = npcSpritePool[randomSpriteIndex].npcAnimMapElement;
+
 }
 
 void ACivillian::CombatUpdate(float deltaTime)

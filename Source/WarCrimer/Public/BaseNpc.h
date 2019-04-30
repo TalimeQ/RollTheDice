@@ -6,6 +6,11 @@
 #include "GameFramework/Actor.h"
 #include "BaseNpc.generated.h"
 
+class UPaperFlipbookComponent;
+class UPaperFlipbook;
+
+
+
 UENUM(Blueprintable, BlueprintType) enum ENpcStatus
 {
 	ENpcIdle,
@@ -15,6 +20,28 @@ UENUM(Blueprintable, BlueprintType) enum ENpcStatus
 	ENpcSpawned
 };
 
+UENUM(Blueprintable, BlueprintType) enum ENpcAnimStatus
+{
+	ENpcIdleAnim,
+	ENpcWalkAnim,
+	ENpcDeathAnim,
+	ENpcDeadAnim,
+	ENpcCombatAnim,
+	ENpcSpawnedAnim,
+	ENpcBonusAnim,
+	ENpcBonus2Anim,
+	EnpcBonus3Anim
+};
+
+USTRUCT(Blueprintable, BlueprintType) struct FSpriteRepresentation
+{
+	GENERATED_BODY()
+		UPROPERTY(EditAnywhere,BlueprintReadWrite, Category = "Sprites")
+		TMap<TEnumAsByte<ENpcAnimStatus>, UPaperFlipbook*> npcAnimMapElement;
+
+};
+
+
 UCLASS(abstract)
 class WARCRIMER_API ABaseNpc : public AActor
 {
@@ -23,11 +50,36 @@ class WARCRIMER_API ABaseNpc : public AActor
 
 protected:
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Npc")
+		TArray<FSpriteRepresentation> npcSpritePool;
+
 	UPROPERTY(BlueprintReadWrite, Category = "Npc")
 		TEnumAsByte<ENpcStatus> currentNpcStatus { ENpcStatus::ENpcIdle };
+
+	UPROPERTY(BlueprintReadWrite, Category = "Npc")
+		TEnumAsByte<ENpcAnimStatus> currentNpcAnimationStatus{ ENpcAnimStatus::ENpcIdleAnim };
+
+	UPROPERTY(BlueprintReadWrite, Category = "Npc")
+		UPaperFlipbookComponent* npcRepresentation = nullptr;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Lives")
-	int hp = 3;
+		int hp = 3;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Sprite")
+		TMap<TEnumAsByte<ENpcAnimStatus>, UPaperFlipbook*> npcAnimSprites;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
+		FVector2D minMovementRange {-200,-30};
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
+		FVector2D maxMovementRange {200,50};
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
+		float wanderWaitTime = 5.0f;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Movement")
+		float combatSpeedBias = 10.0f;
+
 
 private:
 
@@ -43,7 +95,7 @@ protected:
 
 	virtual void UpdateState(float deltaTime);
 	
-	UFUNCTION(BlueprintCallable, Category = "state")
+	UFUNCTION(BlueprintCallable, Category = "State")
 	virtual void SwitchState(TEnumAsByte<ENpcStatus> newState);
 
 	UFUNCTION(BlueprintCallable, Category = "Combat")
@@ -53,15 +105,41 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "State")
+	TEnumAsByte<ENpcStatus> GetState();
+
+	/*
+		Manually change animation state of NPC
+		Only changes state NOT ANIMATION
+		Use with caution
+	*/
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void SetAnimationState(TEnumAsByte<ENpcAnimStatus> newAnimationStatus);
+
 private:
-	virtual void CombatUpdate(float deltaTime) PURE_VIRTUAL(ABaseNpc::CombatUpdate(), ;);
 
-	virtual void IdleUpdate(float deltaTime)  PURE_VIRTUAL(ABaseNpc::IdleUpdate(), ;);
+	virtual void SwitchToCombat();
 
-	virtual void DyingUpdate(float deltaTime)  PURE_VIRTUAL(ABaseNpc::DyingUpdate(), ;);
+	virtual void SwitchToIdle();
 
-	virtual void SpawnedUpdate(float deltaTime) PURE_VIRTUAL(ABaseNpc::SpawnedUpdate(), ;);
+	virtual void SwitchToWander();
+	
+	virtual void SwitchToDying();
 
-	virtual void WanderUpdate(float deltaTime) PURE_VIRTUAL(ABaseNpc::WanderUpdate(), ;);
+	virtual void SwitchToSpawned();
+
+
+	virtual void CombatUpdate(float deltaTime);
+
+	virtual void IdleUpdate(float deltaTime);
+
+	virtual void DyingUpdate(float deltaTime);
+		
+	virtual void SpawnedUpdate(float deltaTime);
+
+	virtual void WanderUpdate(float deltaTime);
+	
+	UFUNCTION(BlueprintCallable, Category = "State")
+	void SwitchAnimation();
 	
 };
