@@ -19,6 +19,9 @@ void ABaseNpc::BeginPlay()
 {
 	Super::BeginPlay();
 	stateUpdate = &ABaseNpc::IdleUpdate;
+	int randomSpriteIndex = FMath::RandRange(0, npcSpritePool.Num() - 1);
+	this->npcAnimSprites = npcSpritePool[randomSpriteIndex].npcAnimMapElement;
+	SwitchState(ENpcStatus::ENpcIdle);
 
 }
 

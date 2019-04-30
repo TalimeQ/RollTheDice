@@ -15,14 +15,6 @@ void ACivillian::SpawnedUpdate(float deltaTime)
 void  ACivillian::BeginPlay()
 {
 	Super::BeginPlay();
-	SetRandomSpriteSet();
-
-}
-
-void ACivillian::SetRandomSpriteSet()
-{
-	int randomSpriteIndex = FMath::RandRange(0, npcSpritePool.Num() - 1);
-	this->npcAnimSprites = npcSpritePool[randomSpriteIndex].npcAnimMapElement;
 
 }
 
